@@ -46,6 +46,7 @@ const mongoose = require("mongoose"),
         type: String,
         trim: true,
       },
+      discussions: [{ type: Schema.Types.ObjectId, ref: "Discussion" }],
       password: {
         type: String,
         required: true,

@@ -28,18 +28,20 @@ const pagesController = require("./controllers/pagesController"),
  */
 
 // 애플리케이션에 Mongoose 설정
-const mongoose = require("mongoose"), // mongoose를 요청
+const mongoose = require("mongoose");// mongoose를 요청
+const { createSemanticDiagnosticsBuilderProgram } = require("typescript");
+const discussionsController = require("./controllers/discussionsController");
   dbName = "ut-nodejs";
 
 // 데이터베이스 연결 설정
-mongoose.connect(`mongodb://127.0.0.1:27017/${dbName}`, {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  "mongodb+srv://jayojs01:jay1004@cluster0.lusnslh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+);
 
 // 연결되면 메시지를 보냄
 const db = mongoose.connection;
 db.once("open", () => {
-  console.log(`Connected to ${dbName} MongoDB using Mongoose!`);
+  console.log(`Connected to MongoDB using Mongoose!`);
 });
 
 /**
@@ -200,6 +202,20 @@ router.delete(
   trainsController.redirectView
 );
 
+/** Discussions 라우트 추가
+* The root route is /discussions = 라우트의 루트는 /discussions
+*
+* Look at the User routes above for guidance = 위의 사용자 라우트를 참고
+* =====================================================================
+*/
+
+router.get("/discussions", discussionsController.index, discussionsController.indexView);
+router.get("/discussions/new", discussionsController.new);
+router.post("/discussions/create", discussionsController.create, discussionsController.redirectView);
+router.get("/discussions/:id", discussionsController.show, discussionsController.showView);
+router.get("/discussions/:id/edit", discussionsController.edit);
+router.put("/discussions/:id/update", discussionsController.update, discussionsController.redirectView);
+router.delete("/discussions/:id/delete", discussionsController.delete, discussionsController.redirectView);
 /**
  * =====================================================================
  * Errors Handling & App Startup
@@ -212,3 +228,5 @@ app.listen(app.get("port"), () => {
   // 3000번 포트로 리스닝 설정
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
+
+
